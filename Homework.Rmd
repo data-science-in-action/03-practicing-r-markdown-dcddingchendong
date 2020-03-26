@@ -1,0 +1,86 @@
+---
+title: "Approximation of the distribution function of $N(0, 1)$"
+author: "dingchendong"
+date: "2020/3/26"
+output: html_document
+abstract: "This report complete approximation of the distribution fuction \nof $N(0,1)$
+  by the Monte Carlo methods.Monte Carlo method is also known as statistical simulation method, refers to the use of random numbers to solve many computational problems."
+---
+
+
+## 1 **Math Equation**
+
+In this problem, i consider approximation the distribution
+function of  $N(0,1)$ , 
+\begin{align}
+    \Phi(t) = \int_{-\infty}^t\frac{1}{\sqrt{{2\pi}}}e^
+     {(-y^2)/2} \,{\rm d}y,
+\end{align}
+by the Monte Carlo methods:
+\begin{align}
+    \hat{\Phi}(t) = \frac{1}{n}\sum_{i=1}^n I(X_i \leq t),
+\end{align}
+where $X_i$ is a random sample from $N(0,1)$, and $I(.)$ is 
+the indicator function.
+Experiment with the approximation at
+$n \in \{10^2, 10^3, 10^4\}$ at
+$t \in \{0.0, 0.67, 0.84, 1.28, 1.65, 2.32, 2.58, 3.09, 3.72\}$ to
+form a table.
+
+## 2 **Table**
+
+The approximation results are shown in the table.
+
+```{r norm, echo = TRUE }
+t=c(0,0.67,0.84,1.28,1.65,2.32,2.58,3.09,3.72)
+n=c(100,1000,10000)
+p=matrix(0,nrow=9,ncol=3)
+#a=0
+for (i in 1:9)
+  for(j in 1:3){
+    #a=a+1
+    num=rnorm(n[j],0,1)
+    p[i,j]=mean(num<t[i])
+    #print(a)
+  }
+rownames(p)<-t
+colnames(p)<-n
+true_value<-c(pnorm(0),pnorm(0.67),pnorm(0.84),pnorm(1.28),pnorm(1.65),
+           pnorm(2.32),pnorm(2.58),pnorm(3.09),pnorm(3.72))
+p<-cbind(p,true_value)
+p<-round(p,digits=3)
+#make figure more beautiful
+library(knitr)
+library(magrittr)
+library(kableExtra)
+kable(p, booktabs=TRUE, caption='(ref:the results)') %>%
+  kable_styling(bootstrap_options = "striped",full_width = F) %>% 
+ column_spec(1,bold=T)#full_width=F, is or isn't full of screen
+
+```
+
+## 3 **Figure**
+
+After repeat the experiment 100 times, I draw box plots of the 100 approximation errors at each $t$ using **ggplot2** for each $n$. 
+
+<div align=center>
+![Caption for the picture.](F:/上课/Git/third/Rplot/Rplot1 t=0.png)
+![Caption for the picture.](F:/上课/Git/third/Rplot/Rplot2 t=0.67.png)
+![Caption for the picture.](F:/上课/Git/third/Rplot/Rplot3 t=0.84.png)
+![Caption for the picture.](F:/上课/Git/third/Rplot/Rplot4 t=1.28.png)
+![Caption for the picture.](F:/上课/Git/third/Rplot/Rplot5 t=1.65.png)
+![Caption for the picture.](F:/上课/Git/third/Rplot/Rplot6 t=2.32.png)
+![Caption for the picture.](F:/上课/Git/third/Rplot/Rplot7 t=2.58.png)
+![Caption for the picture.](F:/上课/Git/third/Rplot/Rplot8 t=3.09.png)
+![Caption for the picture.](F:/上课/Git/third/Rplot/Rplot9 t=3.72.png)
+
+## 4 **Explaination**
+In the section Table, i generete one table to describe the 
+difference between approximation and true value. The results show that the error decreases with the increase of the number of samples.And in the section figure, it proves once again that this includes. At the same time, we can see that when the number of samples increases, the extreme value decreases. 
+Especially, when t=3.09, n=100 or t=3.72, n=100, 1000, the errors are almost 0.
+
+## 5 **Code reference**
+
+Refer to the code of other students in the process of compiling the code.
+
+&emsp;&emsp;[Reference website：https://github.com/data-science-in-action/03-practicing-r-markdown-fanngguofang](https://github.com/data-science-in-action/03-practicing-r-markdown-fanngguofang)
